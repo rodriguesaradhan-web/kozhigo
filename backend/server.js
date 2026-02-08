@@ -50,6 +50,10 @@ app.use(cors({
     origin: function (origin, callback) {
         // Allow requests with no origin (mobile apps, curl, etc.)
         if (!origin) return callback(null, true);
+        // In development, allow all localhost and private network origins
+        if (origin.match(/^http:\/\/(localhost|127\.0\.0\.1|192\.168\.\d+\.\d+|172\.\d+\.\d+\.\d+|10\.\d+\.\d+\.\d+)(:\d+)?$/)) {
+            return callback(null, true);
+        }
         if (allowedOrigins.includes(origin)) {
             return callback(null, true);
         }
@@ -87,6 +91,6 @@ mongoose.connect(process.env.MONGO_URI, {
         process.exit(1);
     });
 
-app.listen(PORT, () => {
+app.listen(PORT, '0.0.0.0', () => {
     console.log(`Server running on port ${PORT} in ${process.env.NODE_ENV || 'development'} mode`);
 });

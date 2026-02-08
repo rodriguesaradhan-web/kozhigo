@@ -5,9 +5,8 @@ const StudentRegistration = require('../models/StudentRegistration');
 const DriverApplication = require('../models/DriverApplication');
 const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
-const fs = require('fs');
-const path = require('path');
 const auth = require('../middleware/auth');
+const { uploadFile } = require('../config/supabase');
 
 // Register
 router.post('/register', async (req, res) => {
@@ -114,16 +113,9 @@ router.post('/register-student', async (req, res) => {
             return res.status(400).json({ message: 'File size must be less than 5MB' });
         }
 
-        // Create uploads directory if it doesn't exist
-        const uploadsDir = path.join(__dirname, '../uploads/student-ids');
-        if (!fs.existsSync(uploadsDir)) {
-            fs.mkdirSync(uploadsDir, { recursive: true });
-        }
-
-        // Save file
-        const fileName = `${sid}-${Date.now()}-${file.name}`;
-        const filePath = path.join(uploadsDir, fileName);
-        await file.mv(filePath);
+        // Upload file to Supabase Storage
+        const fileName = `student-ids/${sid}-${Date.now()}-${file.name}`;
+        const imageUrl = await uploadFile(file.data, fileName, file.mimetype);
 
         // Hash password
         const hashedPassword = await bcrypt.hash(password, 10);
@@ -134,7 +126,7 @@ router.post('/register-student', async (req, res) => {
             sid,
             email,
             password: hashedPassword,
-            studentIdImagePath: `/uploads/student-ids/${fileName}`,
+            studentIdImagePath: imageUrl,
             status: 'PENDING'
         });
 
@@ -192,23 +184,16 @@ router.post('/apply-driver', auth, async (req, res) => {
             return res.status(400).json({ message: 'File size must be less than 5MB' });
         }
 
-        // Create uploads directory if it doesn't exist
-        const uploadsDir = path.join(__dirname, '../uploads/driver-licenses');
-        if (!fs.existsSync(uploadsDir)) {
-            fs.mkdirSync(uploadsDir, { recursive: true });
-        }
-
-        // Save file
-        const fileName = `${userId}-${Date.now()}-${file.name}`;
-        const filePath = path.join(uploadsDir, fileName);
-        await file.mv(filePath);
+        // Upload file to Supabase Storage
+        const fileName = `driver-licenses/${userId}-${Date.now()}-${file.name}`;
+        const imageUrl = await uploadFile(file.data, fileName, file.mimetype);
 
         // Create DriverApplication record (PENDING approval)
         const driverApp = new DriverApplication({
             user: userId,
             userName: user.name,
             userEmail: user.email,
-            drivingLicenseImagePath: `/uploads/driver-licenses/${fileName}`,
+            drivingLicenseImagePath: imageUrl,
             status: 'PENDING'
         });
 

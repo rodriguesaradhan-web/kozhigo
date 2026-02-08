@@ -351,7 +351,7 @@ const AdminDashboard = () => {
                                         <h5 style={{ margin: '0 0 0.5rem 0' }}>Student ID Image:</h5>
                                         {reg.studentIdImagePath ? (
                                             <img
-                                                src={`${API_URL}${reg.studentIdImagePath}`}
+                                                src={reg.studentIdImagePath.startsWith('http') ? reg.studentIdImagePath : `${API_URL}${reg.studentIdImagePath}`}
                                                 alt="Student ID"
                                                 style={styles.imagePreview}
                                                 onError={(e) => {
@@ -428,7 +428,7 @@ const AdminDashboard = () => {
                                         <h5 style={{ margin: '0 0 0.5rem 0' }}>Driving License:</h5>
                                         {app.drivingLicenseImagePath ? (
                                             <img
-                                                src={`${API_URL}${app.drivingLicenseImagePath}`}
+                                                src={app.drivingLicenseImagePath.startsWith('http') ? app.drivingLicenseImagePath : `${API_URL}${app.drivingLicenseImagePath}`}
                                                 alt="Driving License"
                                                 style={styles.imagePreview}
                                                 onError={(e) => {

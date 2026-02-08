@@ -4,6 +4,7 @@ import '../styles/Landing.css';
 
 const Landing = () => {
   const navigate = useNavigate();
+  const [showTerms, setShowTerms] = useState(false);
   
   const calculateFare = (km) => Math.max(25, Math.ceil(km * 5));
   
@@ -155,7 +156,72 @@ const Landing = () => {
       <footer className="landing-footer">
         <p>&copy; 2026 KozhiGo. All rights reserved.</p>
         <p>Your trusted ride-sharing platform for campus and beyond</p>
+        <p style={{ marginTop: '0.5rem' }}>
+          <span 
+            onClick={() => setShowTerms(true)} 
+            style={{ cursor: 'pointer', textDecoration: 'underline', color: '#4a90e2' }}
+          >
+            Terms & Conditions
+          </span>
+        </p>
       </footer>
+
+      {/* Terms & Conditions Modal */}
+      {showTerms && (
+        <div className="terms-overlay" onClick={() => setShowTerms(false)}>
+          <div className="terms-modal" onClick={(e) => e.stopPropagation()}>
+            <button className="terms-close" onClick={() => setShowTerms(false)}>&times;</button>
+            <h2>Terms & Conditions – KozhiGo</h2>
+            
+            <div className="terms-content">
+              <h3>1. Acceptance of Terms</h3>
+              <p>By using KozhiGo, users agree to follow the terms and conditions of the platform. The service is intended only for students commuting within Kozhikode.</p>
+
+              <h3>2. Student-Only Platform</h3>
+              <p>KozhiGo is designed exclusively for college students. Users must provide valid student details while registering and must use the platform responsibly.</p>
+
+              <h3>3. Ride Sharing Responsibility</h3>
+              <p>Drivers and passengers are responsible for coordinating rides, timings, and locations. KozhiGo only connects users and does not operate as a transport provider.</p>
+
+              <h3>4. Two-Wheeler Usage</h3>
+              <p>The platform supports ride sharing only through two-wheelers such as scooters and bikes. Users must follow traffic rules and safety practices during travel.</p>
+
+              <h3>5. Cost Sharing</h3>
+              <p>Petrol expenses may be shared between driver and passenger based on the distance travelled. KozhiGo does not handle payments directly and is not responsible for disputes regarding cost sharing.</p>
+
+              <h3>6. User Conduct</h3>
+              <p>Users must:</p>
+              <ul>
+                <li>Provide accurate information</li>
+                <li>Behave respectfully with other users</li>
+                <li>Avoid misuse of the platform</li>
+                <li>Follow local traffic and safety regulations</li>
+              </ul>
+              <p>Any misuse may lead to account restriction.</p>
+
+              <h3>7. Ride Status Updates</h3>
+              <p>Users are expected to update ride progress during and after trips to maintain transparency and coordination.</p>
+
+              <h3>8. Safety Disclaimer</h3>
+              <p>KozhiGo is a student-initiated platform that connects riders and passengers. The platform is not responsible for accidents, delays, or personal issues that may occur during travel.</p>
+
+              <h3>9. Admin Rights</h3>
+              <p>Admins reserve the right to:</p>
+              <ul>
+                <li>Monitor activity</li>
+                <li>Remove rides</li>
+                <li>Restrict users in case of misuse</li>
+              </ul>
+
+              <h3>10. Changes to Terms</h3>
+              <p>These terms may be updated as the platform evolves. Continued use of KozhiGo implies acceptance of any updates.</p>
+
+              <h3>11. Disclaimer</h3>
+              <p>Any violation of the above Terms and Conditions will be taken seriously. KozhiGo reserves the right to restrict, suspend, or remove user access in cases of misuse, false information, unsafe behavior, or non-compliance with platform guidelines.</p>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 };
